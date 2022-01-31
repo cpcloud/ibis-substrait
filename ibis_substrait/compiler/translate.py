@@ -22,6 +22,7 @@ from ibis import util
 from ..proto.substrait import expression_pb2 as stexpr
 from ..proto.substrait import relations_pb2 as strel
 from ..proto.substrait import type_pb2 as stt
+from . import operations as st_ops
 from .core import SubstraitCompiler, _get_fields
 
 T = TypeVar("T")
@@ -573,7 +574,10 @@ def table_column(
 
 @translate.register(ops.UnboundTable)
 def unbound_table(
-    op: ops.UnboundTable, expr: ir.TableExpr, _: SubstraitCompiler, **kwargs: Any
+    op: ops.UnboundTable,
+    expr: ir.TableExpr,
+    _: SubstraitCompiler,
+    **kwargs: Any,
 ) -> strel.Rel:
     return strel.Rel(
         read=strel.ReadRel(
@@ -581,6 +585,29 @@ def unbound_table(
             # TODO: projection,
             base_schema=translate(op.schema),
             named_table=strel.ReadRel.NamedTable(names=[op.name]),
+        )
+    )
+
+
+@translate.register(st_ops.LocalFilesTable)
+def local_files(
+    op: st_ops.LocalFilesTable,
+    expr: ir.TableExpr,
+    _: SubstraitCompiler,
+    **kwargs: Any,
+) -> strel.Rel:
+    parquet = strel.ReadRel.LocalFiles.FileOrFiles.FileFormat.FILE_FORMAT_PARQUET
+    return strel.Rel(
+        read=strel.ReadRel(
+            # TODO: filter,
+            # TODO: projection,
+            base_schema=translate(op.schema),
+            local_files=strel.ReadRel.LocalFiles(
+                items=[
+                    strel.ReadRel.LocalFiles.FileOrFiles(uri_file=file, format=parquet)
+                    for file in op.files
+                ],
+            ),
         )
     )
 

@@ -25,6 +25,7 @@ from ..proto.substrait import expression_pb2 as stexpr
 from ..proto.substrait import plan_pb2 as stp
 from ..proto.substrait import relations_pb2 as strel
 from ..proto.substrait import type_pb2 as stt
+from . import operations as st_ops
 from .core import SubstraitDecompiler, _get_fields, which_one_of
 from .translate import _MICROSECONDS_PER_SECOND, _MINUTES_PER_HOUR, _SECONDS_PER_MINUTE
 
@@ -365,6 +366,17 @@ def _decompile_named_table(
 
     # TODO: replace with ops.CatalogTable once there's an ibis client impl
     return ibis.table(schema=schema, name=name)
+
+
+@decompile.register
+def _decompile_local_files(
+    local_files_table: strel.ReadRel.LocalFiles,
+    _schema: ibis.Schema,
+    _decompiler: SubstraitDecompiler,
+) -> ir.TableExpr:
+    return st_ops.LocalFilesTable(
+        [item.uri_file for item in local_files_table.items]
+    ).to_expr()
 
 
 def _get_child_tables(child: ir.TableExpr) -> Sequence[ops.TableNode]:

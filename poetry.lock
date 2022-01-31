@@ -1,4 +1,12 @@
 [[package]]
+name = "appdirs"
+version = "1.4.4"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "astunparse"
 version = "1.6.3"
 description = "An AST unparser for Python"
@@ -206,6 +214,21 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
 
 [[package]]
+name = "jedi"
+version = "0.18.1"
+description = "An autocompletion tool for Python that can be used for text editors."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+parso = ">=0.8.0,<0.9.0"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["Django (<3.1)", "colorama", "docopt", "pytest (<7.0.0)"]
+
+[[package]]
 name = "mccabe"
 version = "0.6.1"
 description = "McCabe checker, plugin for flake8"
@@ -303,6 +326,18 @@ pytz = ">=2017.3"
 test = ["hypothesis (>=3.58)", "pytest (>=6.0)", "pytest-xdist"]
 
 [[package]]
+name = "parso"
+version = "0.8.3"
+description = "A Python Parser"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["docopt", "pytest (<6.0.0)"]
+
+[[package]]
 name = "parsy"
 version = "1.4.0"
 description = "easy-to-use parser combinators, for parsing in pure Python"
@@ -346,6 +381,17 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "prompt-toolkit"
+version = "3.0.24"
+description = "Library for building powerful interactive command lines in Python"
+category = "dev"
+optional = false
+python-versions = ">=3.6.2"
+
+[package.dependencies]
+wcwidth = "*"
+
+[[package]]
 name = "protobuf"
 version = "3.19.4"
 description = "Protocol Buffers"
@@ -367,12 +413,42 @@ click = ">=7.1.2,<9"
 protobuf = ">=3.19.1,<4.0.0"
 
 [[package]]
+name = "ptpython"
+version = "3.0.20"
+description = "Python REPL build on top of prompt_toolkit"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+appdirs = "*"
+importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
+jedi = ">=0.16.0"
+prompt-toolkit = ">=3.0.18,<3.1.0"
+pygments = "*"
+
+[package.extras]
+all = ["black"]
+ptipython = ["ipython"]
+
+[[package]]
 name = "py"
 version = "1.11.0"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "pyarrow"
+version = "6.0.1"
+description = "Python library for Apache Arrow"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+numpy = ">=1.16.6"
 
 [[package]]
 name = "pycodestyle"
@@ -403,6 +479,14 @@ description = "passive checker of Python programs"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "pygments"
+version = "2.11.2"
+description = "Pygments is a syntax highlighting package written in Python."
+category = "dev"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "pyparsing"
@@ -608,6 +692,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "wcwidth"
+version = "0.2.5"
+description = "Measures the displayed width of unicode strings in a terminal"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "zipp"
 version = "3.7.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -622,9 +714,13 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.11"
-content-hash = "c39aec6209206a9c2c97d7854aaabffbce7240e6d573c02ba702605c74fed51a"
+content-hash = "be98990abfc6314f9ab27cb5eebaca37e846a02593789a08a6e7cde127318c20"
 
 [metadata.files]
+appdirs = [
+    {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
+    {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
+]
 astunparse = [
     {file = "astunparse-1.6.3-py2.py3-none-any.whl", hash = "sha256:c2652417f2c8b5bb325c885ae329bdf3f86424075c4fd1a128674bc6fba4b8e8"},
     {file = "astunparse-1.6.3.tar.gz", hash = "sha256:5ad93a8456f0d084c3456d059fd9a92cce667963232cbf763eac3bc5b7940872"},
@@ -725,6 +821,10 @@ iniconfig = [
 isort = [
     {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
     {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
+]
+jedi = [
+    {file = "jedi-0.18.1-py2.py3-none-any.whl", hash = "sha256:637c9635fcf47945ceb91cd7f320234a7be540ded6f3e99a50cb6febdfd1ba8d"},
+    {file = "jedi-0.18.1.tar.gz", hash = "sha256:74137626a64a99c8eb6ae5832d99b3bdd7d29a3850fe2aa80a4126b2a7d949ab"},
 ]
 mccabe = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
@@ -828,6 +928,10 @@ pandas = [
     {file = "pandas-1.3.5-cp39-cp39-win_amd64.whl", hash = "sha256:32e1a26d5ade11b547721a72f9bfc4bd113396947606e00d5b4a5b79b3dcb006"},
     {file = "pandas-1.3.5.tar.gz", hash = "sha256:1e4285f5de1012de20ca46b188ccf33521bff61ba5c5ebd78b4fb28e5416a9f1"},
 ]
+parso = [
+    {file = "parso-0.8.3-py2.py3-none-any.whl", hash = "sha256:c001d4636cd3aecdaf33cbb40aebb59b094be2a74c556778ef5576c175e19e75"},
+    {file = "parso-0.8.3.tar.gz", hash = "sha256:8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0"},
+]
 parsy = [
     {file = "parsy-1.4.0-py2.py3-none-any.whl", hash = "sha256:01aa47cf3aa2a911e4d8653193c061605acf229b802ab3a7c97692fd6aa790de"},
     {file = "parsy-1.4.0.tar.gz", hash = "sha256:7c411373e520e97431f0b390db9d2cfc5089bc1d33f4f1584d2cdc9e6368f302"},
@@ -843,6 +947,10 @@ platformdirs = [
 pluggy = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
+]
+prompt-toolkit = [
+    {file = "prompt_toolkit-3.0.24-py3-none-any.whl", hash = "sha256:e56f2ff799bacecd3e88165b1e2f5ebf9bcd59e80e06d395fa0cc4b8bd7bb506"},
+    {file = "prompt_toolkit-3.0.24.tar.gz", hash = "sha256:1bb05628c7d87b645974a1bad3f17612be0c29fa39af9f7688030163f680bad6"},
 ]
 protobuf = [
     {file = "protobuf-3.19.4-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:f51d5a9f137f7a2cec2d326a74b6e3fc79d635d69ffe1b036d39fc7d75430d37"},
@@ -876,9 +984,51 @@ protoletariat = [
     {file = "protoletariat-0.7.4-py3-none-any.whl", hash = "sha256:c1a2e7bb473a02a42ccd35de0fd481e40bb61b60330cdfe45c8ab3984a6c9f28"},
     {file = "protoletariat-0.7.4.tar.gz", hash = "sha256:72b3977bb35d4de1f5497ec0181cb3333b9e020890595c87b717ed932414b0c5"},
 ]
+ptpython = [
+    {file = "ptpython-3.0.20-py2.py3-none-any.whl", hash = "sha256:99636899ab0e4d026e2ecc9368269114f387b4bb5411e57f072b0bde724d9f99"},
+    {file = "ptpython-3.0.20.tar.gz", hash = "sha256:eafd4ced27ca5dc370881d4358d1ab5041b32d88d31af8e3c24167fe4af64ed6"},
+]
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
+]
+pyarrow = [
+    {file = "pyarrow-6.0.1-cp310-cp310-macosx_10_13_universal2.whl", hash = "sha256:c80d2436294a07f9cc54852aa1cef034b6f9c97d29235c4bd53bbf52e24f1ebf"},
+    {file = "pyarrow-6.0.1-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:f150b4f222d0ba397388908725692232345adaa8e58ad543ca00f03c7234ae7b"},
+    {file = "pyarrow-6.0.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c3a727642c1283dcb44728f0d0a00f8864b171e31c835f4b8def07e3fa8f5c73"},
+    {file = "pyarrow-6.0.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:d29605727865177918e806d855fd8404b6242bf1e56ade0a0023cd4fe5f7f841"},
+    {file = "pyarrow-6.0.1-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b63b54dd0bada05fff76c15b233f9322de0e6947071b7871ec45024e16045aeb"},
+    {file = "pyarrow-6.0.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:9e90e75cb11e61ffeffb374f1db7c4788f1df0cb269596bf86c473155294958d"},
+    {file = "pyarrow-6.0.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1f4f3db1da51db4cfbafab3066a01b01578884206dced9f505da950d9ed4402d"},
+    {file = "pyarrow-6.0.1-cp310-cp310-win_amd64.whl", hash = "sha256:2523f87bd36877123fc8c4813f60d298722143ead73e907690a87e8557114693"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-macosx_10_13_x86_64.whl", hash = "sha256:8f7d34efb9d667f9204b40ce91a77613c46691c24cd098e3b6986bd7401b8f06"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e3c9184335da8faf08c0df95668ce9d778df3795ce4eec959f44908742900e10"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:02baee816456a6e64486e587caaae2bf9f084fa3a891354ff18c3e945a1cb72f"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:604782b1c744b24a55df80125991a7154fbdef60991eb3d02bfaed06d22f055e"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fab8132193ae095c43b1e8d6d7f393451ac198de5aaf011c6b576b1442966fec"},
+    {file = "pyarrow-6.0.1-cp36-cp36m-win_amd64.whl", hash = "sha256:31038366484e538608f43920a5e2957b8862a43aa49438814619b527f50ec127"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-macosx_10_13_x86_64.whl", hash = "sha256:632bea00c2fbe2da5d29ff1698fec312ed3aabfb548f06100144e1907e22093a"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:dc03c875e5d68b0d0143f94c438add3ab3c2411ade2748423a9c24608fea571e"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:1cd4de317df01679e538004123d6d7bc325d73bad5c6bbc3d5f8aa2280408869"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e77b1f7c6c08ec319b7882c1a7c7304731530923532b3243060e6e64c456cf34"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a424fd9a3253d0322d53be7bbb20b5b01511706a61efadcf37f416da325e3d48"},
+    {file = "pyarrow-6.0.1-cp37-cp37m-win_amd64.whl", hash = "sha256:c958cf3a4a9eee09e1063c02b89e882d19c61b3a2ce6cbd55191a6f45ed5004b"},
+    {file = "pyarrow-6.0.1-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:0e0ef24b316c544f4bb56f5c376129097df3739e665feca0eb567f716d45c55a"},
+    {file = "pyarrow-6.0.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:2c13ec3b26b3b069d673c5fa3a0c70c38f0d5c94686ac5dbc9d7e7d24040f812"},
+    {file = "pyarrow-6.0.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:71891049dc58039a9523e1cb0d921be001dacb2b327fa7b62a35b96a3aad9f0d"},
+    {file = "pyarrow-6.0.1-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:943141dd8cca6c5722552a0b11a3c2e791cdf85f1768dea8170b0a8a7e824ff9"},
+    {file = "pyarrow-6.0.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1fd077c06061b8fa8fdf91591a4270e368f63cf73c6ab56924d3b64efa96a873"},
+    {file = "pyarrow-6.0.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5308f4bb770b48e07c8cff36cf6a4452862e8ce9492428ad5581d846420b3884"},
+    {file = "pyarrow-6.0.1-cp38-cp38-win_amd64.whl", hash = "sha256:cde4f711cd9476d4da18128c3a40cb529b6b7d2679aee6e0576212547530fef1"},
+    {file = "pyarrow-6.0.1-cp39-cp39-macosx_10_13_universal2.whl", hash = "sha256:b8628269bd9289cae0ea668f5900451043252fe3666667f614e140084dd31aac"},
+    {file = "pyarrow-6.0.1-cp39-cp39-macosx_10_13_x86_64.whl", hash = "sha256:981ccdf4f2696550733e18da882469893d2f33f55f3cbeb6a90f81741cbf67aa"},
+    {file = "pyarrow-6.0.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:954326b426eec6e31ff55209f8840b54d788420e96c4005aaa7beed1fe60b42d"},
+    {file = "pyarrow-6.0.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:6b6483bf6b61fe9a046235e4ad4d9286b707607878d7dbdc2eb85a6ec4090baf"},
+    {file = "pyarrow-6.0.1-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:7ecad40a1d4e0104cd87757a403f36850261e7a989cf9e4cb3e30420bbbd1092"},
+    {file = "pyarrow-6.0.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:04c752fb41921d0064568a15a87dbb0222cfbe9040d4b2c1b306fe6e0a453530"},
+    {file = "pyarrow-6.0.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:725d3fe49dfe392ff14a8ae6a75b230a60e8985f2b621b18cfa912fe02b65f1a"},
+    {file = "pyarrow-6.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:2403c8af207262ce8e2bc1a9d19313941fd2e424f1cb3c4b749c17efe1fd699a"},
+    {file = "pyarrow-6.0.1.tar.gz", hash = "sha256:423990d56cd8f12283b67367d48e142739b789085185018eb03d05087c3c8d43"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
@@ -891,6 +1041,10 @@ pydocstyle = [
 pyflakes = [
     {file = "pyflakes-2.4.0-py2.py3-none-any.whl", hash = "sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e"},
     {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
+]
+pygments = [
+    {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
+    {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.7-py3-none-any.whl", hash = "sha256:a6c06a88f252e6c322f65faf8f418b16213b51bdfaece0524c1c1bc30c63c484"},
@@ -1065,6 +1219,10 @@ types-pytz = [
 typing-extensions = [
     {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
     {file = "typing_extensions-4.0.1.tar.gz", hash = "sha256:4ca091dea149f945ec56afb48dae714f21e8692ef22a395223bcd328961b6a0e"},
+]
+wcwidth = [
+    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
+    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
 ]
 zipp = [
     {file = "zipp-3.7.0-py3-none-any.whl", hash = "sha256:b47250dd24f92b7dd6a0a8fc5244da14608f3ca90a5efcd37a3b1642fac9a375"},
