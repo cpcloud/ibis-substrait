@@ -10,7 +10,7 @@ import pytz
 
 from ibis_substrait.compiler.decompile import decompile
 from ibis_substrait.compiler.translate import _date_to_days, _time_to_micros, translate
-from ibis_substrait.proto.substrait import expression_pb2 as stexpr
+from ibis_substrait.proto.substrait import algebra_pb2 as sta
 from ibis_substrait.proto.substrait import type_pb2 as stt
 
 NULLABILITY_NULLABLE = stt.Type.Nullability.NULLABILITY_NULLABLE
@@ -38,12 +38,12 @@ literal_cases = pytest.mark.parametrize(
         # booleans
         pytest.param(
             ibis.literal(True),
-            stexpr.Expression(literal=stexpr.Expression.Literal(boolean=True)),
+            sta.Expression(literal=sta.Expression.Literal(boolean=True)),
             id="boolean_true",
         ),
         pytest.param(
             ibis.literal(False),
-            stexpr.Expression(literal=stexpr.Expression.Literal(boolean=False)),
+            sta.Expression(literal=sta.Expression.Literal(boolean=False)),
             id="boolean_false",
         ),
     ]
@@ -51,9 +51,7 @@ literal_cases = pytest.mark.parametrize(
         # integers
         pytest.param(
             ibis.literal(value),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(**{substrait_type: value})
-            ),
+            sta.Expression(literal=sta.Expression.Literal(**{substrait_type: value})),
             id=f"{substrait_type}_{value_name}",
         )
         for ibis_type, substrait_type in [
@@ -68,38 +66,36 @@ literal_cases = pytest.mark.parametrize(
         # floating point
         pytest.param(
             ibis.literal(1.0, type="float64"),
-            stexpr.Expression(literal=stexpr.Expression.Literal(fp64=1.0)),
+            sta.Expression(literal=sta.Expression.Literal(fp64=1.0)),
             id="fp64",
         ),
         pytest.param(
             ibis.literal(2.0, type="float32"),
-            stexpr.Expression(literal=stexpr.Expression.Literal(fp32=2.0)),
+            sta.Expression(literal=sta.Expression.Literal(fp32=2.0)),
             id="fp32",
         ),
         # strings
         pytest.param(
             ibis.literal("foo"),
-            stexpr.Expression(literal=stexpr.Expression.Literal(string="foo")),
+            sta.Expression(literal=sta.Expression.Literal(string="foo")),
             id="string",
         ),
         pytest.param(
             ibis.literal("⋃"),
-            stexpr.Expression(literal=stexpr.Expression.Literal(string="⋃")),
+            sta.Expression(literal=sta.Expression.Literal(string="⋃")),
             id="unicode_string",
         ),
         # binary
         pytest.param(
             ibis.literal(b"42", type="binary"),
-            stexpr.Expression(literal=stexpr.Expression.Literal(binary=b"42")),
+            sta.Expression(literal=sta.Expression.Literal(binary=b"42")),
             id="binary",
         ),
         # timestamp
         pytest.param(
             ibis.timestamp(TIMESTAMP),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
-                    timestamp=int(MICROSECONDS_SINCE_EPOCH)
-                ),
+            sta.Expression(
+                literal=sta.Expression.Literal(timestamp=int(MICROSECONDS_SINCE_EPOCH)),
             ),
             id="timestamp",
         ),
@@ -108,8 +104,8 @@ literal_cases = pytest.mark.parametrize(
                 datetime.datetime.fromtimestamp(TIMESTAMP.timestamp(), tz=pytz.utc),
                 timezone="UTC",
             ),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     timestamp_tz=int(MICROSECONDS_SINCE_EPOCH)
                 ),
             ),
@@ -118,13 +114,13 @@ literal_cases = pytest.mark.parametrize(
         # date
         pytest.param(
             ibis.date(DATE),
-            stexpr.Expression(literal=stexpr.Expression.Literal(date=DATE_DAYS)),
+            sta.Expression(literal=sta.Expression.Literal(date=DATE_DAYS)),
             id="date",
         ),
         # time
         pytest.param(
             ibis.time(TIME),
-            stexpr.Expression(literal=stexpr.Expression.Literal(time=TIME_MICROS)),
+            sta.Expression(literal=sta.Expression.Literal(time=TIME_MICROS)),
             id="time",
         ),
     ]
@@ -132,10 +128,10 @@ literal_cases = pytest.mark.parametrize(
         # interval_year_to_month
         pytest.param(
             ibis.interval(**{key: value}),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     interval_year_to_month=(
-                        stexpr.Expression.Literal.IntervalYearToMonth(**{key: value})
+                        sta.Expression.Literal.IntervalYearToMonth(**{key: value})
                     )
                 ),
             ),
@@ -148,10 +144,10 @@ literal_cases = pytest.mark.parametrize(
         # interval_day_to_second
         pytest.param(
             ibis.interval(**{key: value}),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     interval_day_to_second=(
-                        stexpr.Expression.Literal.IntervalDayToSecond(**{key: value})
+                        sta.Expression.Literal.IntervalDayToSecond(**{key: value})
                     )
                 ),
             ),
@@ -167,14 +163,14 @@ literal_cases = pytest.mark.parametrize(
         # struct
         pytest.param(
             ibis.literal(OrderedDict(a=1.0, b=[2.0])),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
-                    struct=stexpr.Expression.Literal.Struct(
+            sta.Expression(
+                literal=sta.Expression.Literal(
+                    struct=sta.Expression.Literal.Struct(
                         fields=[
-                            stexpr.Expression.Literal(fp64=1.0),
-                            stexpr.Expression.Literal(
-                                list=stexpr.Expression.Literal.List(
-                                    values=[stexpr.Expression.Literal(fp64=2.0)],
+                            sta.Expression.Literal(fp64=1.0),
+                            sta.Expression.Literal(
+                                list=sta.Expression.Literal.List(
+                                    values=[sta.Expression.Literal(fp64=2.0)],
                                 )
                             ),
                         ]
@@ -187,13 +183,13 @@ literal_cases = pytest.mark.parametrize(
         # map
         pytest.param(
             ibis.literal(dict(a=[], b=[2])),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
-                    map=stexpr.Expression.Literal.Map(
+            sta.Expression(
+                literal=sta.Expression.Literal(
+                    map=sta.Expression.Literal.Map(
                         key_values=[
-                            stexpr.Expression.Literal.Map.KeyValue(
-                                key=stexpr.Expression.Literal(string="a"),
-                                value=stexpr.Expression.Literal(
+                            sta.Expression.Literal.Map.KeyValue(
+                                key=sta.Expression.Literal(string="a"),
+                                value=sta.Expression.Literal(
                                     empty_list=stt.Type.List(
                                         type=stt.Type(
                                             i8=stt.Type.I8(
@@ -204,11 +200,11 @@ literal_cases = pytest.mark.parametrize(
                                     ),
                                 ),
                             ),
-                            stexpr.Expression.Literal.Map.KeyValue(
-                                key=stexpr.Expression.Literal(string="b"),
-                                value=stexpr.Expression.Literal(
-                                    list=stexpr.Expression.Literal.List(
-                                        values=[stexpr.Expression.Literal(i8=2)],
+                            sta.Expression.Literal.Map.KeyValue(
+                                key=sta.Expression.Literal(string="b"),
+                                value=sta.Expression.Literal(
+                                    list=sta.Expression.Literal.List(
+                                        values=[sta.Expression.Literal(i8=2)],
                                     )
                                 ),
                             ),
@@ -221,8 +217,8 @@ literal_cases = pytest.mark.parametrize(
         # empty map
         pytest.param(
             ibis.literal({}, type="map<string, int64>"),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     empty_map=stt.Type.Map(
                         key=stt.Type(
                             string=stt.Type.String(nullability=NULLABILITY_NULLABLE)
@@ -241,12 +237,12 @@ literal_cases = pytest.mark.parametrize(
         # uuid
         pytest.param(
             ibis.literal(UUID, type=dt.uuid),
-            stexpr.Expression(literal=stexpr.Expression.Literal(uuid=UUID.bytes)),
+            sta.Expression(literal=sta.Expression.Literal(uuid=UUID.bytes)),
             id="uuid_typed",
         ),
         pytest.param(
             ibis.literal(str(UUID), type=dt.uuid),
-            stexpr.Expression(literal=stexpr.Expression.Literal(uuid=UUID.bytes)),
+            sta.Expression(literal=sta.Expression.Literal(uuid=UUID.bytes)),
             id="uuid_string",
         ),
     ]
@@ -254,8 +250,8 @@ literal_cases = pytest.mark.parametrize(
         # null
         pytest.param(
             ibis.literal(None, type="float64"),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     null=stt.Type(fp64=stt.Type.FP64(nullability=NULLABILITY_NULLABLE))
                 )
             ),
@@ -263,8 +259,8 @@ literal_cases = pytest.mark.parametrize(
         ),
         pytest.param(
             ibis.literal(None, type="array<string>"),
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
+            sta.Expression(
+                literal=sta.Expression.Literal(
                     null=stt.Type(
                         list=stt.Type.List(
                             type=stt.Type(
@@ -280,12 +276,12 @@ literal_cases = pytest.mark.parametrize(
         # list
         pytest.param(
             ibis.literal(["a", "b"]),  # called Array in ibis
-            stexpr.Expression(
-                literal=stexpr.Expression.Literal(
-                    list=stexpr.Expression.Literal.List(
+            sta.Expression(
+                literal=sta.Expression.Literal(
+                    list=sta.Expression.Literal.List(
                         values=[
-                            stexpr.Expression.Literal(string="a"),
-                            stexpr.Expression.Literal(string="b"),
+                            sta.Expression.Literal(string="a"),
+                            sta.Expression.Literal(string="b"),
                         ],
                     )
                 ),
@@ -310,9 +306,9 @@ def test_decimal_literal(compiler):
     # TODO: ibis doesn't validate a decimal.Decimal's value against the
     # provided decimal type
     expr = ibis.literal(decimal.Decimal("234.234"), type="decimal(6, 3)")
-    ir = stexpr.Expression(
-        literal=stexpr.Expression.Literal(
-            decimal=stexpr.Expression.Literal.Decimal(
+    ir = sta.Expression(
+        literal=sta.Expression.Literal(
+            decimal=sta.Expression.Literal.Decimal(
                 value=b"234.234", precision=6, scale=3
             )
         )
