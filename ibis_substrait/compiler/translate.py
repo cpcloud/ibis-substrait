@@ -11,6 +11,7 @@ import datetime
 import functools
 import operator
 import uuid
+from collections import ChainMap
 from typing import Any, MutableMapping, Sequence, TypeVar
 
 import ibis.expr.datatypes as dt
@@ -567,7 +568,11 @@ def table_column(
 
 @translate.register(ops.UnboundTable)
 def unbound_table(
-    op: ops.UnboundTable, expr: ir.TableExpr, _: SubstraitCompiler, **kwargs: Any
+    op: ops.UnboundTable,
+    expr: ir.TableExpr,
+    _: SubstraitCompiler,
+    scope: ChainMap,
+    **kwargs: Any,
 ) -> sta.Rel:
     return sta.Rel(
         read=sta.ReadRel(
@@ -591,6 +596,7 @@ def selection(
     op: ops.Selection,
     expr: ir.TableExpr,
     compiler: SubstraitCompiler,
+    depth: int,
     **kwargs: Any,
 ) -> sta.Rel:
     assert not kwargs.get(
@@ -699,6 +705,16 @@ def join(
             type=_translate_join_type(op),
         )
     )
+
+
+@translate.register(ops.MaterializedJoin)
+def _materialized_join(
+    op: ops.MaterializedJoin,
+    expr: ir.TableExpr,
+    compiler: SubstraitCompiler,
+    **kwargs: Any,
+) -> sta.Rel:
+    return translate(op.join.op(), op.join, compiler, **kwargs)
 
 
 @translate.register(ops.Limit)

@@ -39,6 +39,7 @@ types-protobuf = "^3.18.1"
 mypy-protobuf = "^3.0.0"
 pytz = "^2021.3"
 types-pytz = "^2021.3.4"
+SQLAlchemy = "^1.4.31"
 
 [tool.pytest.ini_options]
 xfail_strict = true
