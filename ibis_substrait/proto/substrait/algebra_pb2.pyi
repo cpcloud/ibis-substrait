@@ -254,9 +254,13 @@ class ReadRel(google.protobuf.message.Message):
             START_FIELD_NUMBER: builtins.int
             LENGTH_FIELD_NUMBER: builtins.int
             uri_path: typing.Text
+            'A URI that can refer to either a single folder or a single file'
             uri_path_glob: typing.Text
+            'A URI where the path portion is a glob expression that can\n            identify zero or more paths.\n            Consumers should support the POSIX syntax.  The recursive\n            globstar (**) may not be supported.\n            '
             uri_file: typing.Text
+            'A URI that refers to a single file'
             uri_folder: typing.Text
+            'A URI that refers to a single folder'
             format: global___ReadRel.LocalFiles.FileOrFiles.FileFormat.ValueType
             partition_index: builtins.int
             'the index of the partition this item belongs to'
@@ -802,6 +806,172 @@ class ExtensionMultiRel(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal['common', b'common', 'detail', b'detail', 'inputs', b'inputs']) -> None:
         ...
 global___ExtensionMultiRel = ExtensionMultiRel
+
+class ExchangeRel(google.protobuf.message.Message):
+    """A redistribution operation"""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    class ScatterFields(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        FIELDS_FIELD_NUMBER: builtins.int
+
+        @property
+        def fields(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Expression.FieldReference]:
+            ...
+
+        def __init__(self, *, fields: typing.Optional[typing.Iterable[global___Expression.FieldReference]]=...) -> None:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['fields', b'fields']) -> None:
+            ...
+
+    class SingleBucketExpression(google.protobuf.message.Message):
+        """Returns a single bucket number per record."""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        EXPRESSION_FIELD_NUMBER: builtins.int
+
+        @property
+        def expression(self) -> global___Expression:
+            ...
+
+        def __init__(self, *, expression: typing.Optional[global___Expression]=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing_extensions.Literal['expression', b'expression']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['expression', b'expression']) -> None:
+            ...
+
+    class MultiBucketExpression(google.protobuf.message.Message):
+        """Returns zero or more bucket numbers per record"""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        EXPRESSION_FIELD_NUMBER: builtins.int
+        CONSTRAINED_TO_COUNT_FIELD_NUMBER: builtins.int
+
+        @property
+        def expression(self) -> global___Expression:
+            ...
+        constrained_to_count: builtins.bool
+
+        def __init__(self, *, expression: typing.Optional[global___Expression]=..., constrained_to_count: builtins.bool=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing_extensions.Literal['expression', b'expression']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['constrained_to_count', b'constrained_to_count', 'expression', b'expression']) -> None:
+            ...
+
+    class Broadcast(google.protobuf.message.Message):
+        """Send all data to every target."""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        def __init__(self) -> None:
+            ...
+
+    class RoundRobin(google.protobuf.message.Message):
+        """Route approximately"""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        EXACT_FIELD_NUMBER: builtins.int
+        exact: builtins.bool
+        'whether the round robin behavior is required to exact (per record) or\n        approximate. Defaults to approximate.\n        '
+
+        def __init__(self, *, exact: builtins.bool=...) -> None:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['exact', b'exact']) -> None:
+            ...
+
+    class ExchangeTarget(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        PARTITION_ID_FIELD_NUMBER: builtins.int
+        URI_FIELD_NUMBER: builtins.int
+        EXTENDED_FIELD_NUMBER: builtins.int
+
+        @property
+        def partition_id(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.int]:
+            """Describes the partition id(s) to send. If this is empty, all data is sent
+            to this target.
+            """
+            pass
+        uri: typing.Text
+
+        @property
+        def extended(self) -> google.protobuf.any_pb2.Any:
+            ...
+
+        def __init__(self, *, partition_id: typing.Optional[typing.Iterable[builtins.int]]=..., uri: typing.Text=..., extended: typing.Optional[google.protobuf.any_pb2.Any]=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing_extensions.Literal['extended', b'extended', 'target_type', b'target_type', 'uri', b'uri']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['extended', b'extended', 'partition_id', b'partition_id', 'target_type', b'target_type', 'uri', b'uri']) -> None:
+            ...
+
+        def WhichOneof(self, oneof_group: typing_extensions.Literal['target_type', b'target_type']) -> typing.Optional[typing_extensions.Literal['uri', 'extended']]:
+            ...
+    COMMON_FIELD_NUMBER: builtins.int
+    INPUT_FIELD_NUMBER: builtins.int
+    PARTITION_COUNT_FIELD_NUMBER: builtins.int
+    TARGETS_FIELD_NUMBER: builtins.int
+    SCATTER_BY_FIELDS_FIELD_NUMBER: builtins.int
+    SINGLE_TARGET_FIELD_NUMBER: builtins.int
+    MULTI_TARGET_FIELD_NUMBER: builtins.int
+    ROUND_ROBIN_FIELD_NUMBER: builtins.int
+    BROADCAST_FIELD_NUMBER: builtins.int
+    ADVANCED_EXTENSION_FIELD_NUMBER: builtins.int
+
+    @property
+    def common(self) -> global___RelCommon:
+        ...
+
+    @property
+    def input(self) -> global___Rel:
+        ...
+    partition_count: builtins.int
+
+    @property
+    def targets(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ExchangeRel.ExchangeTarget]:
+        ...
+
+    @property
+    def scatter_by_fields(self) -> global___ExchangeRel.ScatterFields:
+        ...
+
+    @property
+    def single_target(self) -> global___ExchangeRel.SingleBucketExpression:
+        ...
+
+    @property
+    def multi_target(self) -> global___ExchangeRel.MultiBucketExpression:
+        ...
+
+    @property
+    def round_robin(self) -> global___ExchangeRel.RoundRobin:
+        ...
+
+    @property
+    def broadcast(self) -> global___ExchangeRel.Broadcast:
+        ...
+
+    @property
+    def advanced_extension(self) -> substrait.extensions.extensions_pb2.AdvancedExtension:
+        ...
+
+    def __init__(self, *, common: typing.Optional[global___RelCommon]=..., input: typing.Optional[global___Rel]=..., partition_count: builtins.int=..., targets: typing.Optional[typing.Iterable[global___ExchangeRel.ExchangeTarget]]=..., scatter_by_fields: typing.Optional[global___ExchangeRel.ScatterFields]=..., single_target: typing.Optional[global___ExchangeRel.SingleBucketExpression]=..., multi_target: typing.Optional[global___ExchangeRel.MultiBucketExpression]=..., round_robin: typing.Optional[global___ExchangeRel.RoundRobin]=..., broadcast: typing.Optional[global___ExchangeRel.Broadcast]=..., advanced_extension: typing.Optional[substrait.extensions.extensions_pb2.AdvancedExtension]=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing_extensions.Literal['advanced_extension', b'advanced_extension', 'broadcast', b'broadcast', 'common', b'common', 'exchange_kind', b'exchange_kind', 'input', b'input', 'multi_target', b'multi_target', 'round_robin', b'round_robin', 'scatter_by_fields', b'scatter_by_fields', 'single_target', b'single_target']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['advanced_extension', b'advanced_extension', 'broadcast', b'broadcast', 'common', b'common', 'exchange_kind', b'exchange_kind', 'input', b'input', 'multi_target', b'multi_target', 'partition_count', b'partition_count', 'round_robin', b'round_robin', 'scatter_by_fields', b'scatter_by_fields', 'single_target', b'single_target', 'targets', b'targets']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['exchange_kind', b'exchange_kind']) -> typing.Optional[typing_extensions.Literal['scatter_by_fields', 'single_target', 'multi_target', 'round_robin', 'broadcast']]:
+        ...
+global___ExchangeRel = ExchangeRel
 
 class RelRoot(google.protobuf.message.Message):
     """A relation with output field names.
@@ -1386,20 +1556,25 @@ class Expression(google.protobuf.message.Message):
 
             def ClearField(self, field_name: typing_extensions.Literal['if', b'if', 'then', b'then']) -> None:
                 ...
+        MATCH_FIELD_NUMBER: builtins.int
         IFS_FIELD_NUMBER: builtins.int
         ELSE_FIELD_NUMBER: builtins.int
+
+        @property
+        def match(self) -> global___Expression:
+            ...
 
         @property
         def ifs(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Expression.SwitchExpression.IfValue]:
             ...
 
-        def __init__(self, *, ifs: typing.Optional[typing.Iterable[global___Expression.SwitchExpression.IfValue]]=...) -> None:
+        def __init__(self, *, match: typing.Optional[global___Expression]=..., ifs: typing.Optional[typing.Iterable[global___Expression.SwitchExpression.IfValue]]=...) -> None:
             ...
 
-        def HasField(self, field_name: typing_extensions.Literal['else', b'else']) -> builtins.bool:
+        def HasField(self, field_name: typing_extensions.Literal['else', b'else', 'match', b'match']) -> builtins.bool:
             ...
 
-        def ClearField(self, field_name: typing_extensions.Literal['else', b'else', 'ifs', b'ifs']) -> None:
+        def ClearField(self, field_name: typing_extensions.Literal['else', b'else', 'ifs', b'ifs', 'match', b'match']) -> None:
             ...
 
     class SingularOrList(google.protobuf.message.Message):

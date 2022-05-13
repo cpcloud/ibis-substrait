@@ -12,8 +12,8 @@ import sources.nixpkgs {
       substrait = pkgs.fetchFromGitHub {
         owner = "substrait-io";
         repo = "substrait";
-        rev = "9d9805be19c1d606dc2811395f203857db782872";
-        sha256 = "sha256-VarDeSsOc8B7IMtG4T6Ely7VPUZSU7PrhQoy44HZLkE=";
+        rev = "v0.1.2";
+        hash = "sha256-nCOwf5hYfp0IuQpSN00xXWY7bEQgtjNznyJ9RcL+oDA=";
       };
 
       mkPoetryEnv = python: pkgs.poetry2nix.mkPoetryEnv {

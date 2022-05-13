@@ -1,14 +1,16 @@
+// SPDX-License-Identifier: Apache-2.0
 syntax = "proto3";
+
 package substrait;
 
 import "substrait/type.proto";
 
+option csharp_namespace = "Substrait.Protobuf";
+option go_package = "github.com/substrait-io/substrait-go/proto";
 option java_multiple_files = true;
 option java_package = "io.substrait.proto";
-option csharp_namespace = "Substrait.Protobuf";
 
 message ParameterizedType {
-
   oneof kind {
     Type.Boolean bool = 1;
     Type.I8 i8 = 2;
@@ -52,7 +54,9 @@ message ParameterizedType {
     NullableInteger range_end_exclusive = 3;
   }
 
-  message NullableInteger { int64 value = 1; }
+  message NullableInteger {
+    int64 value = 1;
+  }
 
   message ParameterizedFixedChar {
     IntegerOption length = 1;
