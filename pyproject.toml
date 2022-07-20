@@ -20,10 +20,13 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-ibis-framework = ">=2,<4"
+ibis-framework = { path = "../ibis" }
 packaging = "^21.3"
 platformdirs = "<2.5.3"
 protobuf = ">=3.19,<3.20" # protobuf==3.20 C extensions aren't compatible with 3.19.4
+duckdb = "^0.4.0"
+duckdb-engine = "^0.2.0"
+SQLAlchemy = "^1.4.39"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
